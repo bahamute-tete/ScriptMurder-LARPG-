@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bc71b3aba77540e88cfe23b127952cf, type: 3}
+  m_Name: Player Info Datas Assets
+  m_EditorClassIdentifier: 
+  playerInfos:
+  - player:
+      uid: 12345
+      playerName: "\u5F20\u4E09"
+      type: 0
+    charactor:
+      roalName: "\u5F20\u8D77\u7075"
+      state: 0
+      enterRoom: 1
+  - player:
+      uid: 1234
+      playerName: "\u674E\u56DB"
+      type: 1
+    charactor:
+      roalName: "\u5434\u90AA"
+      state: 2
+      enterRoom: 1
+  - player:
+      uid: 12346
+      playerName: "\u738B\u4E8C"
+      type: 1
+    charactor:
+      roalName: 
+      state: 2
+      enterRoom: 1
+  - player:
+      uid: 12346
+      playerName: "\u8D75\u4E94"
+      type: 1
+    charactor:
+      roalName: "\u6F58\u5B50"
+      state: 0
+      enterRoom: 1
+  - player:
+      uid: 12346
+      playerName: "\u8D75l\u516D"
+      type: 1
+    charactor:
+      roalName: 
+      state: 0
+      enterRoom: 0
+  - player:
+      uid: 12346
+      playerName: "\u8D757"
+      type: 1
+    charactor:
+      roalName: 
+      state: 0
+      enterRoom: 0
