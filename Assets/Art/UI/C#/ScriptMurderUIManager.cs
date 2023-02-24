@@ -30,7 +30,8 @@ public class ScriptMurderUIManager : MonoBehaviour
 
     private void Awake()
     {
-        playerCount = assets.playerInfos.Count;
+     
+       
     }
     // Start is called before the first frame update
     void Start()

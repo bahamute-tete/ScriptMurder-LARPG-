@@ -21,12 +21,13 @@ public class ScriptTestUIManager : MonoBehaviour
     public List<ScriptMurderUIManager.PlayerData> players = new List<ScriptMurderUIManager.PlayerData>();
     public List<GameObject> playerItems = new List<GameObject>();
 
-    private void Awake()
+    void Awake()
     {
         manager = GameObject.Find("Canvas").GetComponent<ScriptMurderUIManager>();
-        CreatePlayerItemList();
         totalSeconds = countDownTime;
-
+       
+       
+        CreatePlayerItemList();
     }
 
     // Start is called before the first frame update
@@ -43,13 +44,13 @@ public class ScriptTestUIManager : MonoBehaviour
 
     void CreatePlayerItemList()
     {
-        playerCount = manager.playerCount;
+        playerCount = manager.assets.playerInfos.Count;
 
         if (contentBox.childCount != 0)
         {
             for (int i = 0; i < contentBox.childCount; i++)
             {
-                DestroyImmediate(contentBox.GetChild(i).gameObject);
+                Destroy(contentBox.GetChild(i).gameObject);
             }
             playerItems.Clear();
         }
