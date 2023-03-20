@@ -11,8 +11,8 @@ public class PlayerInfoDatasAssets : ScriptableObject
         public string uid;
         public string playerName;
 
-        public enum playerType {local=0,net }
-        public playerType type;
+        public enum NetType {local=0,server }
+        public NetType netType;
        
     };
 

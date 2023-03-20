@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.Networking;
+
 
 public class ScriptTestUIManager : MonoBehaviour
 {
-    [SerializeField] Transform contentBox;
-    [SerializeField] GameObject playerItemPrefab;
+    [SerializeField] Transform contentBox,chatContent;
+    [SerializeField] GameObject playerItemPrefab, chatItemPrefab;
     [SerializeField] TextMeshProUGUI waitingCounter;
     [SerializeField,Tooltip("Seconds")] float countDownTime = 30f*60f;
     float totalSeconds;
@@ -16,35 +18,118 @@ public class ScriptTestUIManager : MonoBehaviour
     ScriptMurderUIManager manager;
     ScriptMurderUIManager.PlayerData playerDatas;
 
-    int playerCount;
+    int playerCount,messageCount;
 
     public List<ScriptMurderUIManager.PlayerData> players = new List<ScriptMurderUIManager.PlayerData>();
+    public List<ScriptMurderUIManager.ChatData> chatMessages = new List<ScriptMurderUIManager.ChatData>();
     public List<GameObject> playerItems = new List<GameObject>();
+    public List<GameObject> chatItmes = new List<GameObject>();
 
-    void Awake()
+
+
+    ///////////////////////////////UI/////////
+    [SerializeField] Button chatViewBtn, chatPublicBtn, chatPrivateBtn, chatAudioBtn, storyInroBtn;
+    [SerializeField] GameObject chatView, storyInfoView;
+    [SerializeField] TextMeshProUGUI storyTextContent;
+    [SerializeField]bool isFolded_storyView = true, isFolded_chatView=true;
+   
+
+    private void Awake()
     {
+
         manager = GameObject.Find("Canvas").GetComponent<ScriptMurderUIManager>();
+       
         totalSeconds = countDownTime;
-       
-       
-        CreatePlayerItemList();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
+        ////Button callback
+        chatViewBtn.onClick.AddListener(OnChatView);
+        chatPublicBtn.onClick.AddListener(OnPublicChatView);
+        chatPrivateBtn.onClick.AddListener(OnPrivateChatView);
+        chatAudioBtn.onClick.AddListener(OnAudioChatView);
+        storyInroBtn.onClick.AddListener(OnStoryInfo);
        
+
+        playerCount = manager.playerCount;
+        ///Create player and chat ui item  only for debug
+        CreatePlayerItemList();
+        CreateChatItemList();
     }
 
-    // Update is called once per frame
+    private void OnStoryInfo()
+    {
+        StartCoroutine(GetStoryInfo());
+
+        //chatView and storyView exchange
+        isFolded_storyView = !isFolded_storyView;
+
+        if (!isFolded_chatView)
+        {
+            chatView.GetComponent<LerpAnim>().Active();
+            isFolded_chatView = true;
+        }
+
+        IconDirectionChange();
+    }
+
+    private void OnChatView()
+    {
+
+
+
+
+        //chatView and storyView exchange
+        isFolded_chatView = !isFolded_chatView;
+
+        if (!isFolded_storyView)
+        {
+            storyInfoView.GetComponent<LerpAnim>().Active();
+            isFolded_storyView = true;
+        }
+
+        IconDirectionChange();
+
+    }
+
+    private void IconDirectionChange()
+    {
+        RectTransform iconRtc = chatViewBtn.GetComponent<RectTransform>();
+
+        Vector3 scale = (isFolded_chatView) ? new Vector3(1, 1, 1) : new Vector3(1, -1, 1);
+
+        iconRtc.localScale = scale;
+    }
+
+    private void OnAudioChatView()
+    {
+        
+    }
+
+    private void OnPrivateChatView()
+    {
+    }
+
+    private void OnPublicChatView()
+    {  
+    }
+
+   
+
+
+
     void Update()
     {
         PlayerWatingTime();
     }
 
+
+
+    /////////////// Only for Debug///////////////
     void CreatePlayerItemList()
     {
-        playerCount = manager.assets.playerInfos.Count;
+     
 
         if (contentBox.childCount != 0)
         {
@@ -66,10 +151,30 @@ public class ScriptTestUIManager : MonoBehaviour
 
 
     }
+    void CreateChatItemList()
+    {
+        
+        for (int i = 0; i < chatContent.childCount; i++)
+        {
+            Destroy(chatContent.GetChild(i).gameObject);
+        }
+        chatItmes.Clear();
 
+        chatMessages = manager.CollectionChatData();
+
+        for (int i = 0; i < chatMessages.Count; i++)
+        {
+            GameObject item = Instantiate(chatItemPrefab, chatContent);
+            chatItmes.Add(item);
+        }
+    }
+    /////////////// Only for Debug///////////////
+
+
+    //Countdown
     void PlayerWatingTime()
     {
-        int playerCount = manager.playerCount;
+       
 
         if (playerCount == 0)
         {
@@ -79,9 +184,9 @@ public class ScriptTestUIManager : MonoBehaviour
 
         CountDowmTime();
     }
-
     private void CountDowmTime()
     {
+
         totalSeconds -= Time.deltaTime;
 
         int hours =(int) totalSeconds / 3600;
@@ -99,8 +204,39 @@ public class ScriptTestUIManager : MonoBehaviour
         }
     }
 
+    //MainProcess
     private void GameStart()
     {
         
+    }
+
+    //GET storyInfo on Server(python-flask)
+    IEnumerator GetStoryInfo()
+    {
+
+        string url = "http://localhost:2020/script_murder";
+        
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            request.SetRequestHeader("Content-Type", "application/json");
+            yield return request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                var res = request.downloadHandler.text;
+                showResult($"{res}", storyTextContent);
+            }
+        }
+    }
+
+    private void showResult(string text,TextMeshProUGUI content)
+    {
+        content.alignment = TextAlignmentOptions.Left;
+        content.text = text;
+
     }
 }

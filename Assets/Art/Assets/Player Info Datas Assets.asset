@@ -16,7 +16,7 @@ MonoBehaviour:
   - player:
       uid: 12345
       playerName: "\u5F20\u4E09"
-      type: 0
+      netType: 0
     charactor:
       roalName: "\u5F20\u8D77\u7075"
       state: 0
@@ -24,7 +24,7 @@ MonoBehaviour:
   - player:
       uid: 1234
       playerName: "\u674E\u56DB"
-      type: 1
+      netType: 1
     charactor:
       roalName: "\u5434\u90AA"
       state: 2
@@ -32,7 +32,7 @@ MonoBehaviour:
   - player:
       uid: 12346
       playerName: "\u738B\u4E8C"
-      type: 1
+      netType: 1
     charactor:
       roalName: 
       state: 2
@@ -40,24 +40,24 @@ MonoBehaviour:
   - player:
       uid: 12346
       playerName: "\u8D75\u4E94"
-      type: 1
+      netType: 1
     charactor:
       roalName: "\u6F58\u5B50"
-      state: 0
+      state: 1
       enterRoom: 1
   - player:
       uid: 12346
       playerName: "\u8D75l\u516D"
-      type: 1
+      netType: 1
     charactor:
       roalName: 
-      state: 0
+      state: 2
       enterRoom: 0
   - player:
       uid: 12346
       playerName: "\u8D757"
-      type: 1
+      netType: 1
     charactor:
       roalName: 
-      state: 0
+      state: 1
       enterRoom: 0
