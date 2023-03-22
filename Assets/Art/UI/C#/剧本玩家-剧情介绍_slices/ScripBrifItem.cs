@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using static CommonVar.CommonVariable;
 
 public class ScripBrifItem : MonoBehaviour
 {
@@ -11,39 +12,33 @@ public class ScripBrifItem : MonoBehaviour
     string titleText = null, contentText = null;
     [SerializeField] int typeInde;
     [SerializeField]PlayerStoryBreifUIManager manager;
-    [SerializeField]PlayerStoryBreifUIManager.ScriptInfo info;
+    [SerializeField]ScriptInfo info;
 
 
 
     private void OnEnable()
     {
-        manager.onScriptInfo += OninfoChanged;
+        manager.onScriptInfo += OnToggleChanged;
     }
     private void OnDisable()
     {
-        manager.onScriptInfo -= OninfoChanged;
-    }
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-        
+        manager.onScriptInfo -= OnToggleChanged;
     }
 
 
-    public void OninfoReceived()
+
+    public void OnInfoRecived()
     {
-        info = manager.info;
+        info = ScriptMurderUIManager.Instance.info;
         CreateItemContent(typeInde);
-        RebuildLayout();
+        ScriptMurderUIManager.RebuildLayout(this.GetComponent<RectTransform>());
     
     }
 
-    void OninfoChanged(int type, int roleIndxe = 0)
+    void OnToggleChanged(int type, int roleIndxe = 0)
     {
-        info = manager.info;
         ChangeInfo(type, roleIndxe);
-        RebuildLayout();
+        ScriptMurderUIManager.RebuildLayout(this.GetComponent<RectTransform>());
     }
 
 
@@ -146,10 +141,5 @@ public class ScripBrifItem : MonoBehaviour
         content.text = contentText;
     }
 
-    void RebuildLayout()
-    {
-        RectTransform rts = GetComponent<RectTransform>();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rts);
-        Canvas.ForceUpdateCanvases();
-    }
+
 }

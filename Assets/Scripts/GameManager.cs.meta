@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: e1facaefdf54d4cd48d1994238ee7200
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerassets: {fileID: 11400000, guid: 1b2661d7625e74513a8cc257df2c99ae, type: 2}
+  - chatAssets: {fileID: 11400000, guid: 50b2d2589ac53406a922bf754ababc30, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

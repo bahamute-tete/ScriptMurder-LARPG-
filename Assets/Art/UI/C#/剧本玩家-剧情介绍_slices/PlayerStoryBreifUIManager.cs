@@ -7,69 +7,44 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using System;
 using UnityEngine.Events;
+using static CommonVar.CommonVariable;
 
 public class PlayerStoryBreifUIManager : MonoBehaviour
 {
-    [SerializeField] string TestServerUrl;
-    [SerializeField] int roleIndex=0;
-    [SerializeField] Header header;
-    [SerializeField] Image subTitle, subBG;
     [SerializeField] Sprite[] subTitleSprite, subBGSprite;
+    [SerializeField] int roleIndex=0;
+    [SerializeField] Image subTitle, subBG;
     [SerializeField] GameObject storyIntro, relationShip;//UI
 
-
-    ///////////////Json///////////////
-    [System.Serializable]
-    public class ScriptInfo
-    {
-        public string scriptName;
-        public string scriptHint;
-        public string roleHint;
-        public string scriptStory;
-        public List<scriptRoal> scriptRole = new List<scriptRoal>();
-    }
-
-    [System.Serializable]
-    public class scriptRoal
-    {
-        public string name;
-        public string intro;
-        public string details;
-        public string avatarTexture;
-        public string roleStory;
-    }
-    public ScriptInfo info;
+    ScriptInfo info;
 
     ///////////////UI///////////////
     [SerializeField] Toggle tog_Story, tog_Relationship, tog_MyRole;
 
 
-    public UnityEvent onInfoRecived;
+    public UnityEvent OnInfoRecived;
     //typeIndex:0=hintUIItem,1=storyUIItem,2=roleUIItem  roalIndex=index of role
-    public delegate void ScripInfoDelegate(int typeIndex,int roalIndex);
+    public delegate void ScripInfoDelegate(int typeIndex,int roleIndex);
     public event ScripInfoDelegate onScriptInfo;
- 
+
 
     IEnumerator Start()
     {
-        //get data from server
-        StartCoroutine(GetStoryBriefUIInfo(TestServerUrl));
-        yield return new WaitUntil(() => info != null);
-        onInfoRecived.Invoke();
-
         Initialize();
+
+        yield return new WaitUntil(() => info != null);
+        OnInfoRecived.Invoke();
+
+        
     }
 
     private void Initialize()
     {
         storyIntro.SetActive(true);
         relationShip.SetActive(false);
-
         tog_Story.isOn = true;
 
-        header.title.text = info.scriptName;
-        header.gamePlayeBtn.GetComponentInChildren<TextMeshProUGUI>().text = "结束当前环节";
-        header.btnHint.transform.parent.gameObject.SetActive(false);
+       
 
         tog_Story.onValueChanged.AddListener(OnStotyInfo);
         tog_Relationship.onValueChanged.AddListener(OnRelationship);
@@ -120,25 +95,15 @@ public class PlayerStoryBreifUIManager : MonoBehaviour
 
     }
 
-    IEnumerator GetStoryBriefUIInfo( string url)
-    {
-       
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
-        {
-            request.SetRequestHeader("Content-Type", "application/json");
-            yield return request.SendWebRequest();
 
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(request.error);
-            }
-            else
-            {
-                var scriptDatas = request.downloadHandler.text;
-                info = JsonConvert.DeserializeObject<ScriptInfo>(scriptDatas);
-            }
-        }
-    }
+
+
+
+    public void OnInforRecived()
+    {
+        info = ScriptMurderUIManager.Instance.info;
+    } 
+
 
 
 

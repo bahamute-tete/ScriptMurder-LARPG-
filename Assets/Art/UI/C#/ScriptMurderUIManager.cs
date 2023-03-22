@@ -5,79 +5,65 @@ using UnityEngine.UI;
 using TMPro;
 using Newtonsoft.Json;
 using System.Linq;
-using static ScriptMurderUIManager;
+using UnityEngine.Events;
+using UnityEngine.Networking;
+using static CommonVar.CommonVariable;
+ 
 
-public class ScriptMurderUIManager : MonoBehaviour
+public class ScriptMurderUIManager : Singleton<ScriptMurderUIManager>
 {
+
+    string url;
+    public string port;
+
     public PlayerInfoDatasAssets playerassets;
     public PlayerChatTestDataAssets chatAssets;
 
-    public class PlayerData
-    {
-        public string uid;
-        public string playerName;
-        public string roalName;
+    public List<GameObject> uiPerfabs = new List<GameObject>();
 
-        public enum NetType { local, net }
-        public NetType netType;
+    public GameObject currentPage = null;
 
-        
-        public enum prepareState { ready=0, notReady, prepare }
-        public prepareState state;
-
-        public bool enterRoom;
-    }
-    public class ChatData 
-    {
-
-        public string deviceNicname;
-        public int playerType;
-        public int chatType;
-        public int messageOrder;
-        public string message;
-    }
+    [HideInInspector]public ScriptInfo info;
+    public UnityEvent OnScriptsInforRecived;
 
 
     [HideInInspector]public int playerCount;
     public List<ChatData> chatDatas = new List<ChatData>();
 
-    private void Awake()
+    override protected void Awake()
     {
-
+        base.Awake();
         playerCount = playerassets.playerInfos.Count;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        url = $"http://localhost:{port}/script_murder";
     }
 
 
-    public PlayerData GetPlayerInfo(int index)
+    IEnumerator Start()
     {
-        PlayerData datas = new PlayerData();
+        StartCoroutine(ServerGet(url));
+        yield return new WaitUntil(() => info != null);
+        OnScriptsInforRecived.Invoke();
+        Debug.Log(info.scriptName);
+    }
 
-        datas.playerName = playerassets.playerInfos[index].player.playerName;
+
+
+    public UserData GetPlayerInfo(int index)
+    {
+        UserData datas = new UserData();
+
+        datas.userName = playerassets.playerInfos[index].player.playerName;
         datas.uid = playerassets.playerInfos[index].player.uid;
-        datas.netType = (PlayerData.NetType)playerassets.playerInfos[index].player.netType;
+        datas.netType = (UserData.NetType)playerassets.playerInfos[index].player.netType;
 
 
-        datas.state = (PlayerData.prepareState)playerassets.playerInfos[index].charactor.state;
+        datas.state = (UserData.prepareState)playerassets.playerInfos[index].charactor.state;
         datas.roalName = playerassets.playerInfos[index].charactor.roalName;
         datas.enterRoom = playerassets.playerInfos[index].charactor.enterRoom;
        
 
         return datas;
     }
-
-
-
 
     ChatData GetChatInfo(int playerIndex,int messageIndex)
     {
@@ -107,12 +93,32 @@ public class ScriptMurderUIManager : MonoBehaviour
         }
 
         var res = chatDatas.OrderBy(m => m.messageOrder).ToList();
-
-        //foreach (var o in res)
-        //{
-        //    Debug.Log(o.messageOrder);
-        //}
-
         return res;
+    }
+
+    public static void RebuildLayout(RectTransform rt)
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+        Canvas.ForceUpdateCanvases();
+    }
+
+    IEnumerator ServerGet(string url)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            request.SetRequestHeader("Content-Type", "application/json");
+            yield return request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError(request.error);
+
+            }
+            else
+            {
+                var json = request.downloadHandler.text;
+                info = JsonConvert.DeserializeObject<ScriptInfo>(json);
+            }
+        }
     }
 }

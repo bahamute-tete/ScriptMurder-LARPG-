@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using static CommonVar.CommonVariable;
 
 public class PlayerStateItem : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class PlayerStateItem : MonoBehaviour
     bool enterRoom;
 
 
-    ScriptMurderUIManager.PlayerData playerData;
+    UserData userdata;
     //////////////////////////////DEBUGINFO///////
     [Header("Debug")]
     [SerializeField]string defaultStrPlayer;
@@ -43,12 +44,12 @@ public class PlayerStateItem : MonoBehaviour
     void InitializedPlayerItemCard()
     {
         index = transform.GetSiblingIndex();
-        playerData = scriptTestManager.players[index];
+        userdata = scriptTestManager.players[index];
 
         
         enterRoom = scriptTestManager.players[index].enterRoom;
 
-        int type = (int)playerData.netType;
+        int type = (int)userdata.netType;
 
         if ( type==0)
         {
@@ -70,9 +71,9 @@ public class PlayerStateItem : MonoBehaviour
 
         enterRoom = true;
 
-        blackMask.SetActive(String.IsNullOrEmpty(playerData.roalName));
+        blackMask.SetActive(String.IsNullOrEmpty(userdata.roalName));
 
-        if (String.IsNullOrEmpty(playerData.roalName))
+        if (String.IsNullOrEmpty(userdata.roalName))
         {
             roalName.text = defaultStrPlayer;
             roalName.color = new Color(0.598f, 0.598f, 0.598f, 1f);
@@ -80,7 +81,7 @@ public class PlayerStateItem : MonoBehaviour
         }
         else
         {
-            roalName.text = playerData.roalName;
+            roalName.text = userdata.roalName;
             roalName.color = Color.black;
            
         }
@@ -96,20 +97,20 @@ public class PlayerStateItem : MonoBehaviour
 
         
 
-        if (String.IsNullOrEmpty(playerData.roalName))
+        if (String.IsNullOrEmpty(userdata.roalName))
         {
             roalName.text = defaultStrCharactor;
 
             if (enterRoom)
             {
-                blackMask.SetActive(!String.IsNullOrEmpty(playerData.roalName));
+                blackMask.SetActive(!String.IsNullOrEmpty(userdata.roalName));
                 roalName.color = Color.black;
-                int index = (int)playerData.state == 1 ? 2 : (int)playerData.state;
+                int index = (int)userdata.state == 1 ? 2 : (int)userdata.state;
                 UpdateHintText(index);
             }
             else
             {
-                blackMask.SetActive(String.IsNullOrEmpty(playerData.roalName));
+                blackMask.SetActive(String.IsNullOrEmpty(userdata.roalName));
                 roalName.color = new Color(0.365f, 0.365f, 0.365f, 1f);
                 UpdateHintText(1);
             }
@@ -117,10 +118,10 @@ public class PlayerStateItem : MonoBehaviour
         }
         else
         {
-            blackMask.SetActive(String.IsNullOrEmpty(playerData.roalName));
-            roalName.text = playerData.roalName;
+            blackMask.SetActive(String.IsNullOrEmpty(userdata.roalName));
+            roalName.text = userdata.roalName;
             roalName.color = Color.black;
-            int index = (int)playerData.state == 1 ? 2 : (int)playerData.state;
+            int index = (int)userdata.state == 1 ? 2 : (int)userdata.state;
             UpdateHintText(index);
           
         }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.Networking;
+using static CommonVar.CommonVariable;
 
 
 public class ScriptTestUIManager : MonoBehaviour
@@ -16,12 +17,12 @@ public class ScriptTestUIManager : MonoBehaviour
     float totalSeconds;
 
     ScriptMurderUIManager manager;
-    ScriptMurderUIManager.PlayerData playerDatas;
+    UserData playerDatas;
 
     int playerCount,messageCount;
 
-    public List<ScriptMurderUIManager.PlayerData> players = new List<ScriptMurderUIManager.PlayerData>();
-    public List<ScriptMurderUIManager.ChatData> chatMessages = new List<ScriptMurderUIManager.ChatData>();
+    public List<UserData> players = new List<UserData>();
+    public List<ChatData> chatMessages = new List<ChatData>();
     public List<GameObject> playerItems = new List<GameObject>();
     public List<GameObject> chatItmes = new List<GameObject>();
 
@@ -142,7 +143,7 @@ public class ScriptTestUIManager : MonoBehaviour
 
         for (int i = 0; i < playerCount; i++)
         {
-            ScriptMurderUIManager.PlayerData datas = manager.GetPlayerInfo(i);
+            UserData datas = manager.GetPlayerInfo(i);
             players.Add(datas);
 
             GameObject item = Instantiate(playerItemPrefab, contentBox);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static CommonVar.CommonVariable;
 
 public class PlayerChatMessageItem : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class PlayerChatMessageItem : MonoBehaviour
     [SerializeField]int index;
 
 
-    ScriptMurderUIManager.ChatData chatmessage;
+    ChatData chatmessage;
 
 
     Image identifierIcon;
